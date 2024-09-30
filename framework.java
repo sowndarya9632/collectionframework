@@ -1,38 +1,54 @@
 package com.day1;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class MaintainInsertion {
+public class PerformanceComparison {
+	private static final int DATA_SIZE = 100000; // Change this for larger datasets
 
 	public static void main(String[] args) {
-		  Scanner scanner = new Scanner(System.in);
-	        List<String> inputList = new ArrayList<>();
-	        
-	        System.out.println("Enter strings (type 'done' to finish):");
-	        
-	        while (true) {
-	            String input = scanner.next();
-	            if (input.equalsIgnoreCase("done")) {
-	                break;
-	            }
-	            inputList.add(input);
-	        }
-	        
-	        // Getting the LinkedHashSet from the input list
-	        LinkedHashSet<String> resultSet = removeDuplicates(inputList);
-	        
-	        // Printing the output
-	        System.out.println("Unique strings (in order of entry): " + resultSet);
-	        
-	        scanner.close();
-	    }
-
-	    public static LinkedHashSet<String> removeDuplicates(List<String> list) {
-	        // Create a LinkedHashSet to maintain insertion order and remove duplicates
-	        return new LinkedHashSet<>(list);
+		compareSets();
 	}
 
+	private static void compareSets() {
+		// Initialize sets
+		Set<Integer> hashSet = new HashSet<>();
+		Set<Integer> linkedHashSet = new LinkedHashSet<>();
+		Set<Integer> treeSet = new TreeSet<>();
+
+		// Measure performance for each set
+		measureSetPerformance("HashSet", hashSet);
+		measureSetPerformance("LinkedHashSet", linkedHashSet);
+		measureSetPerformance("TreeSet", treeSet);
+	}
+
+	private static void measureSetPerformance(String setType, Set<Integer> set) {
+		long startTime, endTime;
+
+		// Add operation
+		startTime = System.nanoTime();
+		for (int i = 0; i < DATA_SIZE; i++) {
+			set.add(i);
+		}
+		endTime = System.nanoTime();
+		System.out.println(setType + " - Add: " + (endTime - startTime) + " ns");
+
+		// Contains operation
+		startTime = System.nanoTime();
+		for (int i = 0; i < DATA_SIZE; i++) {
+			set.contains(i);
+		}
+		endTime = System.nanoTime();
+		System.out.println(setType + " - Contains: " + (endTime - startTime) + " ns");
+
+		// Remove operation
+		startTime = System.nanoTime();
+		for (int i = 0; i < DATA_SIZE; i++) {
+			set.remove(i);
+		}
+		endTime = System.nanoTime();
+		System.out.println(setType + " - Remove: " + (endTime - startTime) + " ns");
+	}
 }
